@@ -14,7 +14,19 @@ GAMMA = 0.99
 # epsilon parameters
 EPSILON_START = 1.0
 EPSILON_MIN = 0.01
-EPSILON_DECAY = 0.995
+EPSILON_DECAY = 0.9999
 
 # update frequency of the target network (unit: number of steps)
 TARGET_UPDATE_FREQ = 1_000
+
+# Path saving
+DQN_MODEL_PATH = "TrainingData/DQNAgent/models/"
+
+# Training metrics
+NUM_EPISODES = 15_000
+MAX_STEPS_PER_EPISODE = 100
+SAVE_MODEL_EVERY = 1_000
+
+# Testing metrics
+NUM_TEST_EPISODES = 1_000
+DISPLAY_EVERY = 100

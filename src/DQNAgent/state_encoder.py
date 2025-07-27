@@ -3,6 +3,8 @@ from Environment.PokerActions import PokerActions
 from GameEngine.HandEvaluator import HandEvaluator
 from GameEngine.GameState import GameState
 
+import numpy as np
+
 def encode_state_dqn(game_state: GameState, last_opponent_action: PokerActions, current_player: str) -> List[float]:
 	"""
 	Encodes the game state into a normalized feature vector for DQN input

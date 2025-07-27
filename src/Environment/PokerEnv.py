@@ -2,6 +2,7 @@ from GameEngine.GameState import GameState, PokerStages
 from Environment.StateEncoder import encode_state
 from Environment.PokerActions import PokerActions
 from Environment.RuleBasedPlayer import RuleBasedPlayer
+from DQNAgent.state_encoder import encode_state_dqn
 
 class PokerEnv:
 	def __init__(self, players):
@@ -13,17 +14,17 @@ class PokerEnv:
 		self.phase_start_player_index = 0
 		self.rule_based_player = RuleBasedPlayer()
 
-	def reset(self):
+	def reset(self, use_dqn=False):
 		self.game_state = GameState(self.players)
 		self.done = False
 		self.current_player_index = 0
 		self.last_opponent_action = None
 		self.phase_start_player_index = self.current_player_index
-		state = self._get_state()
+		state = self._get_state(use_dqn)
 
 		return state
 
-	def step(self, ai_action: PokerActions, debug=False):
+	def step(self, ai_action: PokerActions, debug=False, use_dqn=False):
 		"""
 		- accept action
 		- apply to gamestate
@@ -35,7 +36,7 @@ class PokerEnv:
 		if current_player == "AI1":
 			action = ai_action
 		else:
-			action = self.rule_based_player.choose_action(self._get_state())
+			action = self.rule_based_player.choose_action(self._get_state(use_dqn))
 
 		# apply action to player
 		if (action == PokerActions.FOLD):
@@ -64,15 +65,18 @@ class PokerEnv:
 			reward = 0
 			winner = None
 
-		state = self._get_state()
+		state = self._get_state(use_dqn)
 		info = {'winner': winner}
 		if debug:
 			print(f"Action: {action}, Agent: {current_player}, Reward: {reward}")
 		return state, reward, self.done, info
 
-	def _get_state(self):
+	def _get_state(self, use_dqn):
 		current_player = self.players[self.current_player_index]
-		return encode_state(self.game_state, self.last_opponent_action, current_player)
+		if use_dqn:
+			return encode_state_dqn(self.game_state, self.last_opponent_action, current_player)
+		else:
+			return encode_state(self.game_state, self.last_opponent_action, current_player)
 
 	def render(self):
 		print(f"Phase: {self.game_state.get_phase().name}")

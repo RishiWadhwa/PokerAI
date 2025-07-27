@@ -1,9 +1,9 @@
-from Deck import Deck
-from Card import Card
-from HandEvaluator import HandEvaluator
+from GameEngine.Deck import Deck
+from GameEngine.Card import Card
+from GameEngine.HandEvaluator import HandEvaluator
 from typing import List, Dict
 from enum import Enum
-from Player import Player
+from GameEngine.Player import Player
 
 class PokerStages(Enum):
     PRE_DEAL = 0
@@ -14,7 +14,7 @@ class PokerStages(Enum):
     REVEAL = 5
 
 class GameState:
-    def __init__(self, players: List[str]):
+    def __init__(self, players: List[str], debug=True):
         self.deck = Deck()
         self.deck.shuffle_deck()
 
@@ -31,6 +31,9 @@ class GameState:
         # winner
         self.winner: str = None  # use player name
 
+        # debug
+        self.debug = debug
+
     def initialize_hands(self):
         for _ in range(2):
             for player_name, player_obj in self.players.items():
@@ -45,7 +48,7 @@ class GameState:
 
     def determine_winner(self) -> str:
         best_hand = None
-        best_strength = [-1, -1]
+        best_strength = [-1]  # initialize with a list for proper comparison
         winner = None
 
         for player_name, player_obj in self.players.items():
@@ -55,12 +58,28 @@ class GameState:
             evaluator = HandEvaluator(player_obj.get_cards(), self.board)
             strength = evaluator.evaluate_hand()
 
-            if strength[0] > best_strength[0] or (strength[0] == best_strength[0] and strength[1] > best_strength[1]):
+            # Compare full strength lists lex order
+            if strength > best_strength:
                 best_strength = strength
                 best_hand = evaluator
                 winner = player_name
 
         return winner
+
+    def get_phase(self) -> PokerStages:
+        return self.game_phase
+
+    def display_phase(self):
+        print(f"=== Phase: {self.game_phase.name} ===")
+        print("Board:", [str(card) for card in self.board])
+
+        for player_name, player_obj in self.players.items():
+            if player_obj.get_status():
+                print(f"{player_name}'s Hand: {[str(card) for card in player_obj.get_cards()]}")
+            else:
+                print(f"{player_name} has folded.")
+
+        print("==\t\t\t==\n\n\n")
 
     def advance_phase(self):
         if self.game_phase == PokerStages.PRE_DEAL:
@@ -81,3 +100,6 @@ class GameState:
         elif self.game_phase == PokerStages.RIVER:
             self.winner = self.determine_winner()
             self.game_phase = PokerStages.REVEAL
+
+        if (self.debug):
+            self.display_phase()

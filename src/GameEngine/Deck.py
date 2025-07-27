@@ -1,6 +1,6 @@
 import random
 from typing import List
-from Card import Card
+from GameEngine.Card import Card
 
 class Deck:
 	def __init__(self):

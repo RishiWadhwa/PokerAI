@@ -1,6 +1,7 @@
 from GameEngine.GameState import GameState, PokerStages
 from Environment.StateEncoder import encode_state
 from Environment.PokerActions import PokerActions
+from Environment.RuleBasedPlayer import RuleBasedPlayer
 
 class PokerEnv:
 	def __init__(self, players):
@@ -10,6 +11,7 @@ class PokerEnv:
 		self.current_player_index = 0
 		self.last_opponent_action: PokerActions = None
 		self.phase_start_player_index = 0
+		self.rule_based_player = RuleBasedPlayer()
 
 	def reset(self):
 		self.game_state = GameState(self.players)
@@ -21,13 +23,20 @@ class PokerEnv:
 
 		return state
 
-	def step(self, action: PokerActions):
+	def step(self, ai_action: PokerActions, debug=False):
 		"""
 		- accept action
 		- apply to gamestate
 		- advance game logic
 		"""
 		current_player = self.players[self.current_player_index]
+
+		# determine action
+		if current_player == "AI1":
+			action = ai_action
+		else:
+			action = self.rule_based_player.choose_action(self._get_state())
+
 		# apply action to player
 		if (action == PokerActions.FOLD):
 			self.game_state.players[current_player].fold()
@@ -48,14 +57,17 @@ class PokerEnv:
 		active_players = [p for p in self.players if self.game_state.players[p].get_status()]
 		if len(active_players) == 1:
 			winner = active_players[0]
-			reward = 1 if self.players[self.current_player_index] == winner else -1
 			self.done = True
+
+			reward = 1 if winner == "AI1" else -1
 		else:
 			reward = 0
 			winner = None
 
 		state = self._get_state()
 		info = {'winner': winner}
+		if debug:
+			print(f"Action: {action}, Agent: {current_player}, Reward: {reward}")
 		return state, reward, self.done, info
 
 	def _get_state(self):

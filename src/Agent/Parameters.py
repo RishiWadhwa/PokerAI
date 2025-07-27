@@ -12,5 +12,8 @@ ALPHA = 0.5
 GAMMA = 0.99
 
 # training metrics
-NUM_EPISODES = 1000
+NUM_EPISODES = 100_000
 MAX_POT = 100
+
+# training files
+Q_LEARNING_FILE = "TrainingData/qtable.pkl"

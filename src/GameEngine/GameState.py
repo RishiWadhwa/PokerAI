@@ -14,7 +14,7 @@ class PokerStages(Enum):
     REVEAL = 5
 
 class GameState:
-    def __init__(self, players: List[str], debug=True):
+    def __init__(self, players: List[str], debug=False):
         self.deck = Deck()
         self.deck.shuffle_deck()
 

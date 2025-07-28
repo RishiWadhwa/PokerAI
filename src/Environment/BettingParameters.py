@@ -1,0 +1,8 @@
+
+# Chips
+STARTING_CHIPS = 1000
+RAISE_SIZES = [10, 20, 50, 100, 200, 500]
+
+# Future constants
+BIG_BLIND = 20
+SMALL_BLIND = 10

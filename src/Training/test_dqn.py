@@ -6,6 +6,7 @@ from DQNAgent.state_encoder import encode_state_dqn
 import DQNAgent.parameters as dqn_params
 from Environment.PokerActions import PokerActions
 from Environment.PokerEnv import PokerEnv
+import Environment.BettingParameters as betting_params
 
 def test(num_episodes=dqn_params.NUM_TEST_EPISODES, model_path=None, players=["AI1", "P1"]):
 	env = PokerEnv(players)
@@ -13,7 +14,7 @@ def test(num_episodes=dqn_params.NUM_TEST_EPISODES, model_path=None, players=["A
 
 	initial_state = env.reset(use_dqn=True)
 	state_size = len(initial_state)
-	action_size = len(PokerActions)
+	action_size = len(PokerActions) + len(betting_params.RAISE_SIZES) - 1
 
 	device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 	agent = DQNAgent(state_size, action_size, device=device)
@@ -57,5 +58,5 @@ def test(num_episodes=dqn_params.NUM_TEST_EPISODES, model_path=None, players=["A
 	print(f"Average reward per episode: {total_rewards / num_episodes:.3f}")
 
 if __name__ == "__main__":
-	model_file = os.path.join(dqn_params.DQN_MODEL_PATH, "dqn_ep15000.pth")
+	model_file = os.path.join(dqn_params.DQN_MODEL_PATH, f"dqn_ep{dqn_params.NUM_EPISODES}.pth")
 	test(model_path=model_file)

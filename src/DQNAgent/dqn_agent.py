@@ -8,9 +8,10 @@ from collections import deque
 from DQNAgent.q_network import QNetwork
 from DQNAgent.replay_buffer import ReplayBuffer
 import DQNAgent.parameters as dqn_params
+import Environment.BettingParameters as betting_params
 from DQNAgent.state_encoder import encode_state_dqn
 
-from Environment.PokerActions import PokerActions
+from Environment.PokerActions import PokerActions, PlayerAction
 
 
 class DQNAgent:
@@ -38,17 +39,38 @@ class DQNAgent:
 
 	def choose_action(self, state):
 		if random.random() < self.epsilon:
-			return random.choice(list(PokerActions))
+			random_action = random.choice(list(PokerActions))
+			if random_action == PokerActions.RAISE:
+				return PlayerAction(PokerActions.RAISE, random.choice(betting_params.RAISE_SIZES))
+			return PlayerAction(random_action)
 		else:
 			state_tensor = torch.tensor(state, dtype=torch.float32, device=self.device).unsqueeze(0)
 			with torch.no_grad():
 				q_values = self.policy_net(state_tensor)
 
 			action_idx = q_values.argmax().item()
-			return list(PokerActions)[action_idx]
+			
+			if action_idx == 0:
+				return PlayerAction(PokerActions.FOLD)
+			elif action_idx == 1:
+				return PlayerAction(PokerActions.CALL)
+			else:
+				raise_amt = betting_params.RAISE_SIZES[action_idx - 2]
+				return PlayerAction(PokerActions.RAISE, raise_amt)
 
-	def step(self, state, action, reward, next_state, done):
-		action_idx = list(PokerActions).index(action)
+	def step(self, state, action:PlayerAction, reward, next_state, done):
+		if action.action_type == PokerActions.FOLD:
+			action_idx = 0
+		elif action.action_type == PokerActions.CALL:
+			action_idx = 1
+		elif action.action_type == PokerActions.RAISE:
+			try:
+				amount_index = betting_params.RAISE_SIZES.index(action.amount)
+				action_idx = 2 + amount_index
+			except ValueError:
+				# fallback
+				action_idx = 2
+
 		self.memory.add(state, action_idx, reward, next_state, done)
 		self.step_count += 1
 

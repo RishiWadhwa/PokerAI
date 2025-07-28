@@ -7,6 +7,7 @@ from DQNAgent.dqn_agent import DQNAgent
 from DQNAgent.state_encoder import encode_state_dqn
 import DQNAgent.parameters as dqn_params
 
+import Environment.BettingParameters as betting_params
 from Environment.PokerEnv import PokerEnv
 from Environment.PokerActions import PokerActions
 
@@ -18,7 +19,7 @@ def train():
     state = env.reset()  # encoded vector from env
 
     state_size = len(state)
-    action_size = len(PokerActions)
+    action_size = len(PokerActions) + len(betting_params.RAISE_SIZES) - 1
 
     agent = DQNAgent(state_size, action_size, device=torch.device("cuda" if torch.cuda.is_available() else "cpu"))
 

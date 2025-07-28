@@ -21,6 +21,7 @@ TARGET_UPDATE_FREQ = 1_000
 
 # Path saving
 DQN_MODEL_PATH = "TrainingData/DQNAgent/models/"
+DQN_BETTING_MODEL_PATH = "TrainingData/DQNAgent/betting-models/"
 
 # Training metrics
 NUM_EPISODES = 100_000

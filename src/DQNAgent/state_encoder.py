@@ -59,7 +59,7 @@ def encode_state_dqn(game_state: GameState, last_opponent_action: PokerActions, 
 
 	state_vector = [
 		norm_hand_strength,
-		*(k / 14 for k in kickers),
+		*norm_kickers,
 		norm_pot,
 		norm_current_bet,
 		norm_chips,

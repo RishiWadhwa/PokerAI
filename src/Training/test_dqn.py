@@ -58,5 +58,5 @@ def test(num_episodes=dqn_params.NUM_TEST_EPISODES, model_path=None, players=["A
 	print(f"Average reward per episode: {total_rewards / num_episodes:.3f}")
 
 if __name__ == "__main__":
-	model_file = os.path.join(dqn_params.DQN_MODEL_PATH, f"dqn_ep{dqn_params.NUM_EPISODES}.pth")
+	model_file = os.path.join(dqn_params.DQN_BETTING_MODEL_PATH, f"dqn_ep{dqn_params.NUM_EPISODES}.pth")
 	test(model_path=model_file)

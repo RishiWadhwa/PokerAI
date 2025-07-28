@@ -16,10 +16,11 @@ def train():
     env = PokerEnv(players)
     player_names = players  # just the list
 
-    state = env.reset()  # encoded vector from env
+    state = env.reset(use_dqn=True)  # encoded vector from env
 
     state_size = len(state)
     action_size = len(PokerActions) + len(betting_params.RAISE_SIZES) - 1
+    print(f"state size: {state_size}, state: {state}")
 
     agent = DQNAgent(state_size, action_size, device=torch.device("cuda" if torch.cuda.is_available() else "cpu"))
 
@@ -44,8 +45,8 @@ def train():
                 break        
 
         if episode % dqn_params.SAVE_MODEL_EVERY == 0:
-            os.makedirs(dqn_params.DQN_MODEL_PATH, exist_ok=True)
-            save_path = os.path.join(dqn_params.DQN_MODEL_PATH, f"dqn_ep{episode}.pth")
+            os.makedirs(dqn_params.DQN_BETTING_MODEL_PATH, exist_ok=True)
+            save_path = os.path.join(dqn_params.DQN_BETTING_MODEL_PATH, f"dqn_ep{episode}.pth")
             agent.save(save_path)
 
             print(f"Episode {episode} - Total Reward: {total_reward:.2f} - Epsilon: {agent.epsilon:.4f}")

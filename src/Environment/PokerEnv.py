@@ -104,14 +104,14 @@ class PokerEnv:
 			self.game_state.winner = winner
 			self.game_state.players[winner].win_chips(self.pot)
 
-			reward = 1 if winner == "AI1" else -1
+			reward = (self.game_state.players["AI1"].get_chips() - betting_params.STARTING_CHIPS)/betting_params.STARTING_CHIPS
 		elif self.game_state.get_phase() == PokerStages.REVEAL:
 			self.done = True
 			winner = self.game_state.determine_winner()
 			self.game_state.winner = winner
 			self.game_state.players[winner].win_chips(self.pot)
 
-			reward = 1 if winner == "AI1" else -1
+			reward = (self.game_state.players["AI1"].get_chips() - betting_params.STARTING_CHIPS)/betting_params.STARTING_CHIPS
 		else:
 			reward = 0
 			winner = None

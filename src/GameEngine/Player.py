@@ -14,6 +14,9 @@ class Player:
 	def get_cards(self) -> List[Card]:
 		return self.cards
 
+	def set_cards(self, hand: List[Card]):
+		self.cards = hand
+
 	def fold(self):
 		self.is_active = False
 

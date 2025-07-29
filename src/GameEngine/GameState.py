@@ -42,6 +42,12 @@ class GameState:
 
         self.game_phase = PokerStages.PRE_FLOP
 
+    def set_ai_hand(self, hand: List[Card]):
+        self.players["AI1"].set_cards(hand)
+
+    def set_board(self, board: List[Card]):
+        self.board = board;
+
     def draw_to_board(self, count: int):
         for _ in range(count):
             self.board.append(self.deck.draw_card())

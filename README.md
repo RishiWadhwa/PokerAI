@@ -4,7 +4,7 @@
 1. [Folder Tree](#folder-tree)
 2. [Key Files](#key-files)
 	- [Key Files: DQN](#key-files-dqn)
-	- [Key Files: Q-Learning](key-files-q)
+	- [Key Files: Q-Learning](#key-files-q)
 3. [Training/Testing DQN Model](#train-dqn)
 4. [Types of Executions](#executions)
 5. [Statistic Calculations](#statistics)

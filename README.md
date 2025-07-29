@@ -106,7 +106,7 @@ To train or test the DQN enter the `PokerAI/src/` folder and run either of the f
 - `python3 -m Training.train_dqn` - Trains the dqn model according to specifications set in: `DQNAgent/parameters.py`
 - `python3 -m Training.test_dqn` - Tests the dqn model according to specifications set in `DQNAgent/parameters.py`
 
-**NOTE: `python3` can and should be substituted with `python` instead if the system dictates it. My system requires use of running `python3` so logs are formatted as such.**
+###### **NOTE: `python3` can and should be substituted with `python` instead if the system dictates it. My system requires use of running `python3` so logs are formatted as such.**
 
 Relevant Parameters for Training:
 1. `BUFFER_SIZE`: How much information can be stored by the AI before resetting the buffer and clearing old learned experiences

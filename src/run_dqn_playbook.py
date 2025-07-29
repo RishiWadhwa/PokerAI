@@ -80,6 +80,14 @@ def main():
 
     state = encode_state_dqn(game_state, None, "AI1")
 
+    can_check = input("Can you check? (yes/no) ")
+    can_check_bool = False
+    while can_check.lower() != "yes" and can_check.lower() != "no":
+        can_check = input("Invalid. Can you check? (yes/no) ")
+
+    if can_check.lower() == "yes":
+        can_check_bool = True
+
 
     agent = DQNAgent(
         state_size=len(state),
@@ -91,7 +99,12 @@ def main():
     agent.load(model_file)
 
     action = agent.choose_action(state)
-    print(f"\n💡 Recommended Action: {action.action_type.name}", end="")
+    
+    if action.action_type == PokerActions.FOLD and can_check_bool:
+        print(f"\n💡 Recommended Action: CHECK", end="")
+    else:
+        print(f"\n💡 Recommended Action: FOLD", end="")
+
     if action.action_type == PokerActions.RAISE:
         print(f" ${action.amount}")
     else:

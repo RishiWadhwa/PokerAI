@@ -1,2 +1,137 @@
 # PokerAI
-Poker AI
+
+## Table of Contents
+1. [Folder Tree](#folder-tree)
+2. [Key Files](#key-files)
+	- [Key Files: DQN](#key-files-dqn)
+	- [Key Files: Q-Learning](key-files-q)
+3. [Training/Testing DQN Model](#train-dqn)
+4. [Types of Executions](#executions)
+
+---
+
+## Poker AI Tree <a name='folder-tree'></a>
+```
+📦PokerAI
+ ┣ 📂src
+ ┃ ┣ 📂Agent
+ ┃ ┃ ┣ 📜Agent.py
+ ┃ ┃ ┣ 📜Parameters.py
+ ┃ ┃ ┣ 📜Policy.py
+ ┃ ┃ ┣ 📜Qtable.py
+ ┃ ┃ ┗ 📜__init
+ __.py
+ ┃ ┣ 📂DQNAgent
+ ┃ ┃ ┣ 📜__init__.py
+ ┃ ┃ ┣ 📜dqn_agent.py
+ ┃ ┃ ┣ 📜parameters.py
+ ┃ ┃ ┣ 📜q_network.py
+ ┃ ┃ ┣ 📜replay_buffer.py
+ ┃ ┃ ┗ 📜state_encoder.py
+ ┃ ┣ 📂Environment
+ ┃ ┃ ┣ 📜BettingParameters.py
+ ┃ ┃ ┣ 📜PokerActions.py
+ ┃ ┃ ┣ 📜PokerEnv.py
+ ┃ ┃ ┣ 📜RuleBasedPlayer.py
+ ┃ ┃ ┣ 📜StateEncoder.py
+ ┃ ┃ ┗ 📜__init__.py
+ ┃ ┣ 📂GameEngine
+ ┃ ┃ ┣ 📜.DS_Store
+ ┃ ┃ ┣ 📜ActionSpace.py
+ ┃ ┃ ┣ 📜Card.py
+ ┃ ┃ ┣ 📜Deck.py
+ ┃ ┃ ┣ 📜GameState.py
+ ┃ ┃ ┣ 📜HandEvaluator.py
+ ┃ ┃ ┣ 📜Player.py
+ ┃ ┃ ┗ 📜__init__.py
+ ┃ ┣ 📂Training
+ ┃ ┃ ┣ 📜__init__.py
+ ┃ ┃ ┣ 📜test_dqn.py
+ ┃ ┃ ┣ 📜test_ql_agent.py
+ ┃ ┃ ┣ 📜train_dqn.py
+ ┃ ┃ ┗ 📜train_qlearning.py
+ ┃ ┣ 📂TrainingData
+ ┃ ┃ ┣ 📂DQNAgent
+ ┃ ┃ ┃ ┣ 📂betting-models
+ ┃ ┃ ┃ ┃ ┗ 📜...
+ ┃ ┃ ┃ ┣ 📂models
+ ┃ ┃ ┃ ┃ ┗ 📜...
+ ┃ ┃ ┗ 📜qtable.pkl
+ ┃ ┣ 📜__init__.py
+ ┃ ┣ 📜GameLoop.py
+ ┃ ┣ 📜dqn_v_player_test.py
+ ┃ ┗ 📜run_dqn_playbook.py
+ ┣ 📜LICENSE
+ ┗ 📜README.md
+```
+
+---
+
+## Key Files: <a name='key-files'></a>
+
+### DQN Model (Deep Q-Learning Network/Deep Q-Network) <a name='key-files-dqn'></a>
+- Supports betting features
+- **dqn_agent:** DQN Agent
+- **parameters:** DQN-specific parameters (training/testing)
+- **q_network:** DQN tensors and matrix calculations
+- **replay_buffer:** Stores past experiences from learned samples in the form of tuples that are serialized.
+- **state_encoder:** Normalizes the state for AI recollection in models to determine most likely to-do
+
+Current win rate *~70%* with payout at *200 chips / 1,000 chips*.
+
+Data of the DQN model with betting is stored in `TrainingData/DQNAgent/betting-models`. Obsolete DQN model without betting is stored in `TrainingData/DQNAgent/models`. 
+- The non-betting model was trained on a randomized player as found in `Environment/RuleBasedPlayer.py` with the `choose_action()` function
+- The betting model was trained on a rule-based player that roughly demonstrates basic poker knowledge and capacity. The rule-based player can be found in `Environment/RuleBasedPlayer.py` in the `choose_rule_based_action()` function which introduces a degree of uncertainty that most players would have when raising demonstrated with the function of that same file: `determine_raise_amt()`.
+	- It should be noted that because the AI was trained against a reasonable uncertainty-based raising model, it also exhibits a similar degree of uncertainty when raising. Meaning, when running the exact same circumstance multiple times, it is possible the AI switches it's raise amount. *However, this change will not be drastic (i.e. 10 --> 200), instead it will be slight (i.e. 10 --> 50).*
+
+**NOTE: non-betting models cannot be retrained nor used in existing codebase**
+
+### Q-Learning Model (No bets + Outdated/Cannot be retrained or demonstrated in current codebase) <a name='key-files-q'></a>
+- **Agent:** Q-Learning Agent
+- **Parameters:** Parameters for the Q-Learning Agent
+- **Policy:** Q-Learning Policy Net (Target Net derived from it)
+- **Qtable:** Standard Q-Learning table for poker
+
+Data of training the Q-learning model is in `TrainingData/qtable.pkl`
+
+---
+
+## Training/Testing DQN Model: <a name='train-dqn'></a>
+
+To train or test the DQN enter the `PokerAI/src/` folder and run either of the following commands:
+- `python3 -m Training.train_dqn` - Trains the dqn model according to specifications set in: `DQNAgent/parameters.py`
+- `python3 -m Training.test_dqn` - Tests the dqn model according to specifications set in `DQNAgent/parameters.py`
+
+**NOTE: `python3` can and should be substituted with `python` instead if the system dictates it. My system requires use of running `python3` so logs are formatted as such.**
+
+Relevant Parameters for Training:
+1. `BUFFER_SIZE`: How much information can be stored by the AI before resetting the buffer and clearing old learned experiences
+2. `BATCH_SIZE`: How many experiences are sampled per training step.
+3. `LR`: (Learning Rate) | How aggressively the model updates weight
+4. `GAMMA`: (Discount Factor) | Controls how much future rewards are considered.
+5. `EPSILON_START`: Initial exploration value. 0-->1 where 1 represents all exploration and 0 represents all learned information
+6. `EPSILON_MIN`: Sets the minimum for training sets at what point should the AI stop exploring and start recalling
+7. `EPSILON_DECAY`: Sets the decay rate of how much the AI should favor learned experiences vs exploring
+8. `TARGET_UPDATE_FREQ`: How often to sync target network, in unit of steps
+9. `NUM_EPISODES`: How many training episodes should be ran.
+10. `MAX_STEPS_PER_EPISODE`: How far into the simulated future should the model view.
+11. `SAVE_MODEL_EVERY`: How often should the model save itself.
+
+Relevant Parameters for Testing:
+1. `NUM_TEST_EPISODES`: Number of tests the model should run.
+2. `DISPLAY_EVERY`: How often to print logs of the test during its evaluation as the `NUM_TEST_EPISODES` may be more than a reasonable number of logs for the user to read. Essentially highlights an evaluation after every some dictated amount.
+
+Model Saves:
+1. `DQN_MODEL_PATH`: Path to the model for non-betting in both training/testing
+2. `DQN_BETTING_MODEL_PATH`: Path to the model for betting in both training/testing
+
+---
+
+## Types of Executions: <a name='executions'></a>
+
+Currently this is/these are the supported execution(s). Execution(s) should be run from `PokerAI/src/` folder, and will not compile if ran elsewhere.
+1. `rule_dqn_playbook.py` : `python3 -m run_dqn_playbook` - Will execute a script allowing you to input your hand and the board repeatedly to recieve an instruction of what the AI suggests you do.
+	- Known bug: the AI sometimes executes `FOLD` instead of `CHECK`. This is because the `CHECK` system was not implemented. When `CHECK` is an available play, make sure you call `CHECK`. 
+	- This was fixed, but *in case* an instance doesn't get caught, use `CHECK` instead of `FOLD`.
+
+**NOTE: `python3` can and should be substituted with `python` instead if the system dictates it. My system requires use of running `python3` so logs are formatted as such.**

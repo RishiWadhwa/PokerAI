@@ -1,6 +1,6 @@
 
 # replay buffer size
-BUFFER_SIZE = 1_000
+BUFFER_SIZE = 100_000
 
 # mini-batch size for training
 BATCH_SIZE = 64

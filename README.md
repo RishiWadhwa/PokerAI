@@ -86,9 +86,9 @@ Data of the DQN model with betting is stored in `TrainingData/DQNAgent/betting-m
 - The betting model was trained on a rule-based player that roughly demonstrates basic poker knowledge and capacity. The rule-based player can be found in `Environment/RuleBasedPlayer.py` in the `choose_rule_based_action()` function which introduces a degree of uncertainty that most players would have when raising demonstrated with the function of that same file: `determine_raise_amt()`.
 	- It should be noted that because the AI was trained against a reasonable uncertainty-based raising model, it also exhibits a similar degree of uncertainty when raising. Meaning, when running the exact same circumstance multiple times, it is possible the AI switches it's raise amount. *However, this change will not be drastic (i.e. 10 --> 200), instead it will be slight (i.e. 10 --> 50).*
 
-**NOTE: non-betting models cannot be retrained nor used in existing codebase**
+###### **NOTE: non-betting models cannot be retrained nor used in existing codebase**
 
-**NOTE 2: *\_\_ chip / \_\_ chips* payout refers to the approximate payout gained. For instance while it may say that `DQN_BETTING_MODEL_PATH` offers a *200 chip / 1,000 chips* this refers to average per game win. After running 8 games winning 2 hands I was up 600 chips. Winnings depend on circumstance.**
+###### **NOTE 2: *\_\_ chip / \_\_ chips* payout refers to the approximate payout gained. For instance while it may say that `DQN_BETTING_MODEL_PATH` offers a *200 chip / 1,000 chips* this refers to average per game win. After running 8 games winning 2 hands I was up 600 chips. Winnings depend on circumstance.**
 
 ### Q-Learning Model (No bets + Outdated/Cannot be retrained or demonstrated in current codebase) <a name='key-files-q'></a>
 - **Agent:** Q-Learning Agent
@@ -140,6 +140,6 @@ Currently this is/these are the supported execution(s). Execution(s) should be r
 	- You can run the program with a high buffer algorithm instead of the usual buffer algorithm. For this switch `DQN_BETTING_MODEL_PATH` to `DQN_BETTING_HIGH_BUFFER_MODEL_PATH`.
 		- `DQN_BETTING_HIGH_BUFFER_MODEL_PATH` offers a *~70%* with *100 chip / 1,000 chips* payout, but is more refined and precise in comparison with the `DQN_BETTING_MODEL_PATH`
 
-**NOTE: `python3` can and should be substituted with `python` instead if the system dictates it. My system requires use of running `python3` so logs are formatted as such.**
+###### **NOTE: `python3` can and should be substituted with `python` instead if the system dictates it. My system requires use of running `python3` so logs are formatted as such.**
 
-**NOTE 2: *\_\_ chip / \_\_ chips* payout refers to the approximate payout gained. For instance while it may say that `DQN_BETTING_MODEL_PATH` offers a *200 chip / 1,000 chips* this refers to average per game win. After running 8 games winning 2 hands I was up 600 chips. Winnings depend on circumstance.**
+###### **NOTE 2: *\_\_ chip / \_\_ chips* payout refers to the approximate payout gained. For instance while it may say that `DQN_BETTING_MODEL_PATH` offers a *200 chip / 1,000 chips* this refers to average per game win. After running 8 games winning 2 hands I was up 600 chips. Winnings depend on circumstance.**

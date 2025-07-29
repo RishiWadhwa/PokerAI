@@ -86,6 +86,8 @@ Data of the DQN model with betting is stored in `TrainingData/DQNAgent/betting-m
 
 **NOTE: non-betting models cannot be retrained nor used in existing codebase**
 
+**NOTE 2: *\_\_ chip / \_\_ chips* payout refers to the approximate payout gained. For instance while it may say that `DQN_BETTING_MODEL_PATH` offers a *200 chip / 1,000 chips* this refers to average per game win. After running 8 games winning 2 hands I was up 600 chips. Winnings depend on circumstance.**
+
 ### Q-Learning Model (No bets + Outdated/Cannot be retrained or demonstrated in current codebase) <a name='key-files-q'></a>
 - **Agent:** Q-Learning Agent
 - **Parameters:** Parameters for the Q-Learning Agent
@@ -133,5 +135,9 @@ Currently this is/these are the supported execution(s). Execution(s) should be r
 1. `rule_dqn_playbook.py` : `python3 -m run_dqn_playbook` - Will execute a script allowing you to input your hand and the board repeatedly to recieve an instruction of what the AI suggests you do.
 	- Known bug: the AI sometimes executes `FOLD` instead of `CHECK`. This is because the `CHECK` system was not implemented. When `CHECK` is an available play, make sure you call `CHECK`. 
 	- This was fixed, but *in case* an instance doesn't get caught, use `CHECK` instead of `FOLD`.
+	- You can run the program with a high buffer algorithm instead of the usual buffer algorithm. For this switch `DQN_BETTING_MODEL_PATH` to `DQN_BETTING_HIGH_BUFFER_MODEL_PATH`.
+		- `DQN_BETTING_HIGH_BUFFER_MODEL_PATH` offers a *~70%* with *100 chip / 1,000 chips* payout, but is more refined and precise in comparison with the `DQN_BETTING_MODEL_PATH`
 
 **NOTE: `python3` can and should be substituted with `python` instead if the system dictates it. My system requires use of running `python3` so logs are formatted as such.**
+
+**NOTE 2: *\_\_ chip / \_\_ chips* payout refers to the approximate payout gained. For instance while it may say that `DQN_BETTING_MODEL_PATH` offers a *200 chip / 1,000 chips* this refers to average per game win. After running 8 games winning 2 hands I was up 600 chips. Winnings depend on circumstance.**

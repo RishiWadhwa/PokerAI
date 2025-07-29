@@ -7,6 +7,8 @@
 	- [Key Files: Q-Learning](key-files-q)
 3. [Training/Testing DQN Model](#train-dqn)
 4. [Types of Executions](#executions)
+5. [Statistic Calculations](#statistics)
+6. [Limitations](#limitations)
 
 ---
 
@@ -143,3 +145,33 @@ Currently this is/these are the supported execution(s). Execution(s) should be r
 ###### **NOTE: `python3` can and should be substituted with `python` instead if the system dictates it. My system requires use of running `python3` so logs are formatted as such.**
 
 ###### **NOTE 2: *\_\_ chip / \_\_ chips* payout refers to the approximate payout gained. For instance while it may say that `DQN_BETTING_MODEL_PATH` offers a *200 chip / 1,000 chips* this refers to average per game win. After running 8 games winning 2 hands I was up 600 chips. Winnings depend on circumstance.**
+
+---
+
+## Statistic Calculations <a name='statistics'></a>
+
+According to research this is the average benchmarks of a poker AI:
+
+| AI Strength | Win Rate bb/100 |
+| ------------|-----------------|
+| Random AI   | ~0 or < 0       |
+| Rule-Based AI | -10 to +5     |
+| Q-Learning/Basic DQN | 0 to +19 |
+| Strong DQN | +20 to +50       |
+| Near Optimal AI (Libratus-, DeepStack-level) | +50 and higher |
+
+The win rate (bb / 100) can be calculated by using the equation: `bb/100 = [ (Net chips [win/lost] + Initial Chips) / Big Blind Amount ] * (100 / Total Hands Played)`.
+
+My AI was under specific instructions to ignore blinds but also doesn't fold on first round, making it to `FLOP` unless given a disastrously 2 of Hearts and 9 of Spades type hand. For that reason to calculate my specific `bb/100` or *ROI* I used this equation: `CHIP ROI % = (100 * Net Chips) / (Games Played * Initial Chips per Game)`.
+
+Calculating this at my specifications of ~70% win rate with a 200 chip payout per 1,000 initial: `CHIP ROI % = (100 * 200,000) / (1,000 * 1,000) = 20,000,000 / 1,000,000 = 20%`.
+
+The finally calculations indicate this model has a *20%* ROI Equating to the estimated goal of making a strong DQN model.
+
+---
+
+## Limitations <a name='limitations'></a>
+
+The biggest limitation I noticed in this was the CPU power needed to train the AI. With my resources I couldn't exceed 100,000 training episodes with a maximum step size of 1,000 steps. When I pushed to 1,000,000 training episodes the terminal window consistently froze or stopped responding, requiring me to force quit it. With a higher CPU power and more RAM I may have ben able to push farther and better refine my AI.
+
+Additionally, the AI tensors are optimized to run on the CUDA-enabled NVIDIA GPU system, which would have significantly improved runtime and training efficiency. However, since I ran the simulation and training/testing on a Mac — which lacks native CUDA support — I was limited to CPU-based tensor operations. As a result, my training and testing times were considerably longer.
